@@ -14,11 +14,18 @@ const getFilter = async (req, res) => {
 
   let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-  let cities = filterStringColumns(worksheet, /^G\d+/, 'city', regex);
+  let isnum = /^\d+$/.test(query);
 
-  let codes = filterNumberColumns(worksheet, /^I\d+/, 'code', regex);
+  let codes = [];
+  let cities = [];
+  let counties = [];
 
-  let counties = filterStringColumns(worksheet, /^AD\d+/, 'county', regex);
+  if (isnum) {
+    codes = filterNumberColumns(worksheet, /^I\d+/, 'code', regex);
+  } else {
+    cities = filterStringColumns(worksheet, /^G\d+/, 'city', regex);
+    counties = filterStringColumns(worksheet, /^AD\d+/, 'county', regex);
+  }
 
   let filter = _.union(cities, codes, counties)
 
