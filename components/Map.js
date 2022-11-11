@@ -6,7 +6,7 @@ const Map = () => {
             class="w-100 pt-5 px-4"
             src="https://maps.google.com/?ll=23.135249,-82.359685&z=14&t=m&output=embed"
             height="70%"
-            frameborder="0"
+            frameBorder="0"
             allowfullscreen>
         </iframe>
     )
