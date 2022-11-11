@@ -4,6 +4,16 @@ import { Nav } from 'react-bootstrap';
 import styles from "../styles/components/_banner.module.scss";
 import { AsyncPaginate } from 'react-select-async-paginate';
 
+export async function getServerSideProps(context) {
+
+    const { name } = context.query;
+
+    const res = await fetch(`${server}/api/property/buy/city/${name}`);
+    const properties = await res.json();
+
+    return { props: { properties: properties } }
+}
+
 const Banner = () => {
 
     const router = useRouter();
