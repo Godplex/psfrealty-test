@@ -3,14 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/font": "^13.0.2",
+    "@popperjs/core": "^2.11.6",
+    "bootstrap": "^5.2.2",
+    "bootswatch": "^5.2.2",
+    "lodash": "^4.17.21",
     "next": "13.0.2",
+    "nprogress": "^0.2.0",
+    "path": "^0.12.7",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-bootstrap": "^2.6.0",
+    "react-dom": "18.2.0",
+    "react-search-autocomplete": "^8.0.0",
+    "react-select": "^5.6.0",
+    "react-select-async-paginate": "^0.7.0",
+    "react-select-fetch": "^0.5.0",
+    "sass": "^1.56.0",
+    "xlsx": "^0.18.5"
   }
 }
