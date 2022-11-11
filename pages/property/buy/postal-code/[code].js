@@ -1,29 +1,19 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import HomeItems from '../../../../components/HomeItems';
-import Map from '../../../../components/Map';
-import { server } from './../../../../config/index';
+import Map from './../../../../components/Map';
+import useSWR from 'swr';
+import { fetcher } from './../../../../utils/fetcher';
+import LoadingItems from './../../../../components/LoadingItems';
 
-export async function getServerSideProps(context) {
-
-    const { code } = context.query;
-
-    const res = await fetch(`${server}/api/property/buy/postal-code/${code}`);
-    const properties = await res.json();
-
-    return { props: { properties: properties } }
-}
-
-const name = ({ properties }) => {
-
-    const [listProperty, setListProperty] = useState([]);
+const name = () => {
 
     const router = useRouter();
     const { code } = router.query;
 
-    useEffect(() => {
-        setListProperty(properties)
-    }, [code])
+    const { data, error } = useSWR(`/api/property/buy/postal-code/${code}`, fetcher)
+
+    if (error) return <div>failed to load</div>
+    if (!data) return <LoadingItems />
 
     return (
         <div className='container-fluid'>
@@ -38,17 +28,17 @@ const name = ({ properties }) => {
                         <div className='d-flex justify-content-between'>
                             <div>
                                 {
-                                    listProperty.length == 1
+                                    data.length == 1
                                         ?
-                                        <p>{listProperty.length} propiedad encontrada</p>
+                                        <p>{data.length} propiedad encontrada</p>
                                         :
-                                        <p>{listProperty.length} propiedades encontradas</p>
+                                        <p>{data.length} propiedades encontradas</p>
                                 }
                             </div>
                         </div>
                         <div className='row gy-4 py-4'>
                             {
-                                listProperty.map((e, index) => {
+                                data.map((e, index) => {
                                     return <HomeItems key={index} {...e} />
                                 })
                             }

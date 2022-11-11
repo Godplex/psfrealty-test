@@ -1,37 +1,19 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import HomeItems from '../../../../components/HomeItems';
-import Map from '../../../../components/Map';
-import { server } from './../../../../config/index';
+import Map from './../../../../components/Map';
+import useSWR from 'swr';
+import { fetcher } from './../../../../utils/fetcher';
+import LoadingItems from './../../../../components/LoadingItems';
 
-export async function getServerSideProps(context) {
-
-    const { name } = context.query;
-
-    const res = await fetch(`${server}/api/property/rent/city/${name}`);
-    const properties = await res.json();
-
-    return { props: { properties: properties } }
-}
-
-const name = ({ properties }) => {
-
-    const [listProperty, setListProperty] = useState([]);
+const name = () => {
 
     const router = useRouter();
     const { name } = router.query;
 
-    const [nameWithSpaces, setnameWithSpaces] = useState('');
+    const { data, error } = useSWR(`/api/property/rent/city/${name}`, fetcher)
 
-    useEffect(() => {
-
-        setListProperty(properties);
-
-        if (name) {
-            setnameWithSpaces(name.replaceAll('-', ' '));
-        }
-
-    }, [name])
+    if (error) return <div>failed to load</div>
+    if (!data) return <LoadingItems />
 
     return (
         <div className='container-fluid'>
@@ -41,22 +23,22 @@ const name = ({ properties }) => {
                         {
                             name
                             &&
-                            <p className='text-center fw-bold pt-4'>Casa y apartamentos en venta en {nameWithSpaces}</p>
+                            <p className='text-center fw-bold pt-4'>Casa y apartamentos en venta en {name.replaceAll('-', ' ')}</p>
                         }
                         <div className='d-flex justify-content-between'>
                             <div>
                                 {
-                                    listProperty.length == 1
+                                    data.length == 1
                                         ?
-                                        <p>{listProperty.length} propiedad encontrada</p>
+                                        <p>{data.length} propiedad encontrada</p>
                                         :
-                                        <p>{listProperty.length} propiedades encontradas</p>
+                                        <p>{data.length} propiedades encontradas</p>
                                 }
                             </div>
                         </div>
                         <div className='row gy-4 py-4'>
                             {
-                                listProperty.map((e, index) => {
+                                data.map((e, index) => {
                                     return <HomeItems key={index} {...e} />
                                 })
                             }
