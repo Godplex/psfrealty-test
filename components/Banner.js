@@ -97,7 +97,17 @@ const Banner = () => {
                             formatOptionLabel={(data) => {
                                 return <>
                                     <span style={{ display: 'block', textAlign: 'left' }}>
-                                        <i className="fa-solid fa-building-user"></i>
+                                        {
+                                            data.type === 'city'
+                                                ?
+                                                <i className="fa-solid fa-building-user"></i>
+                                                :
+                                                data.type === 'code'
+                                                    ?
+                                                    <i className="fa-solid fa-mailbox"></i>
+                                                    :
+                                                    <i className="fa-solid fa-location-dot"></i>
+                                        }
                                         &nbsp;
                                         {data.label}
                                     </span>
